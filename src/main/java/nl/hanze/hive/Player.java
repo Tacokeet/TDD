@@ -1,0 +1,25 @@
+package nl.hanze.hive;
+
+import java.util.ArrayList;
+
+public class Player {
+    private ArrayList<Tile> startingTiles = new ArrayList<Tile>();
+
+    public Player(Hive.Player player) {
+        startingTiles.add(new Tile(player, Hive.Tile.QUEEN_BEE));
+        startingTiles.add(new Tile(player, Hive.Tile.SPIDER));
+        startingTiles.add(new Tile(player, Hive.Tile.SPIDER));
+        startingTiles.add(new Tile(player, Hive.Tile.BEETLE));
+        startingTiles.add(new Tile(player, Hive.Tile.BEETLE));
+        startingTiles.add(new Tile(player, Hive.Tile.SOLDIER_ANT));
+        startingTiles.add(new Tile(player, Hive.Tile.SOLDIER_ANT));
+        startingTiles.add(new Tile(player, Hive.Tile.SOLDIER_ANT));
+        startingTiles.add(new Tile(player, Hive.Tile.GRASSHOPPER));
+        startingTiles.add(new Tile(player, Hive.Tile.GRASSHOPPER));
+        startingTiles.add(new Tile(player, Hive.Tile.GRASSHOPPER));
+    }
+
+    public ArrayList getStartingTiles() {
+        return startingTiles;
+    }
+}
