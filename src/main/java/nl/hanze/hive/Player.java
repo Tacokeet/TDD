@@ -22,4 +22,13 @@ public class Player {
     public ArrayList<Tile> getStartingTiles() {
         return startingTiles;
     }
+
+    public void removeTile(Tile tile){
+        for (Tile t : startingTiles){
+            if (t.getTile() == tile.getTile()){
+                startingTiles.remove(t);
+                break;
+            }
+        }
+    }
 }
