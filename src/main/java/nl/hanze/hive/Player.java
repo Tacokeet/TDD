@@ -3,7 +3,7 @@ package nl.hanze.hive;
 import java.util.ArrayList;
 
 public class Player {
-    private ArrayList<Tile> startingTiles = new ArrayList<Tile>();
+    private ArrayList<Tile> startingTiles = new ArrayList<>();
 
     public Player(Hive.Player player) {
         startingTiles.add(new Tile(player, Hive.Tile.QUEEN_BEE));
@@ -19,7 +19,7 @@ public class Player {
         startingTiles.add(new Tile(player, Hive.Tile.GRASSHOPPER));
     }
 
-    public ArrayList getStartingTiles() {
+    public ArrayList<Tile> getStartingTiles() {
         return startingTiles;
     }
 }

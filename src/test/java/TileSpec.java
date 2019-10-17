@@ -48,8 +48,4 @@ public class TileSpec {
         Tile a = new Tile(Hive.Player.BLACK, Hive.Tile.BEETLE);
         assertEquals(Hive.Tile.BEETLE, a.getTile());
     }
-
-    @Test
-    void name() {
-    }
 }

@@ -11,8 +11,7 @@ public class PlayerSpec {
     @Test
     void givenStartingPlayerTilesWhenStartingSetThenTrue() {
         Player p = new Player(Hive.Player.BLACK);
-        ArrayList<Tile> startingTiles = new ArrayList<Tile>();
-
+        ArrayList<Tile> startingTiles = new ArrayList<>();
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
@@ -24,6 +23,9 @@ public class PlayerSpec {
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
         startingTiles.add(new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
-        assertEquals(startingTiles, p.getStartingTiles());
+        for (int i = 0; i <= startingTiles.size() - 1; i++) {
+            assertEquals(startingTiles.get(i).getTile(), p.getStartingTiles().get(i).getTile());
+            assertEquals(startingTiles.get(i).getPlayer(), p.getStartingTiles().get(i).getPlayer());
+        }
     }
 }

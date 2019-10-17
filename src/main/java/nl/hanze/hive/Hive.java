@@ -24,7 +24,7 @@ public interface Hive {
     void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove;
 
     /**
-     * Pass the turn.
+     * pass the turn.
      * @throws IllegalMove If the turn could not be passed
      */
     void pass() throws IllegalMove;
