@@ -83,7 +83,7 @@ public class Game {
             if (tile.getTile() == Hive.Tile.QUEEN_BEE){
                 whiteQueenBeeInPlay = true;
             }
-            if (whitePlayer.getStartingTiles().size() == 8 && whiteQueenBeeInPlay) {
+            if (whitePlayer.getStartingTiles().size() == 8 && !whiteQueenBeeInPlay) {
                 if (tile.getTile() != Hive.Tile.QUEEN_BEE) {
                     System.out.println(2);
                     return false;

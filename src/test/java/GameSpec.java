@@ -51,21 +51,25 @@ public class GameSpec {
     void givenVictoryWhenTwoPlayersWinThenDrawThenTrue() {
         Game g = new Game();
         g.setTile(0, 0, new Tile(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
-        g.setTile(1, -1, new Tile(Hive.Player.BLACK, Hive.Tile.BEETLE));
-        g.setTile(0, 1, new Tile(Hive.Player.BLACK, Hive.Tile.BEETLE));
-        g.setTile(0, -1, new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
-        g.setTile(-1, 0, new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
-        g.setTile(-1, 1, new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
-        g.setTile(1, 0, new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
+        g.setTile(1, 0, new Tile(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
+        g.setTile(-1, 0, new Tile(Hive.Player.BLACK, Hive.Tile.BEETLE));
+        g.setTile(0, -1, new Tile(Hive.Player.BLACK, Hive.Tile.BEETLE));
+        g.setTile(-1, 1, new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
+        g.setTile(-1, 2, new Tile(Hive.Player.BLACK, Hive.Tile.SPIDER));
+        g.moveTile(-1,2,0,1);
+        g.setTile(1, -2, new Tile(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
+        g.moveTile(1, -2, 1, -1);
 
+        g.setTile(2,0, new Tile(Hive.Player.WHITE, Hive.Tile.BEETLE));
 
-        g.setTile(-4,0,new Tile(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
-        g.setTile(-3,0,new Tile(Hive.Player.WHITE, Hive.Tile.BEETLE));
-        g.setTile(-3,-1,new Tile(Hive.Player.WHITE, Hive.Tile.BEETLE));
-        g.setTile(-4,-1,new Tile(Hive.Player.WHITE, Hive.Tile.SPIDER));
-        g.setTile(-4,1,new Tile(Hive.Player.WHITE, Hive.Tile.SPIDER));
-        g.setTile(-5,1,new Tile(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
-        g.setTile(-5,0,new Tile(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
+        g.setTile(3, -1, new Tile(Hive.Player.WHITE, Hive.Tile.BEETLE));
+        g.moveTile(3,-1,2,-1);
+
+        System.out.println("Come here?");
+        g.setTile(2,1, new Tile(Hive.Player.WHITE, Hive.Tile.SPIDER));
+        System.out.println("After that");
+        g.moveTile(2,1,1,1);
+        System.out.println("dOnes");
         assertEquals("DRAW", g.getWinner());
     }
 }
