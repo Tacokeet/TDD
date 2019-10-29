@@ -78,10 +78,6 @@ public class Board {
         fromCoords.add(fromR);
 
         Stack<TileClass> tilesOnSpot = getTilesOnSpot(fromQ, fromR);
-        System.out.println("Comes here");
-        System.out.println(fromQ);
-        System.out.println(fromR);
-        System.out.println(tilesOnSpot);
         setTile(toQ, toR, tilesOnSpot.pop());
 
         if (tilesOnSpot.empty()) {
@@ -89,19 +85,16 @@ public class Board {
         }
     }
 
-    private void testSetTile(int q, int r, TileClass tileClass, HashMap<ArrayList<Integer>, Stack<TileClass>> testBoard) {
-        System.out.println("-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-        System.out.println("Inside testSetTile Board  " + board);
-        System.out.println("Inside testSetTile TestBoard  " + testBoard);
+    private void testSetTile(int q, int r, TileClass tileClass) {
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(q);
         coords.add(r);
         Stack<TileClass> tileClasses = new Stack<>();
-        if (testBoard.get(coords) != null) {
-            tileClasses = (Stack<TileClass>) testBoard.get(coords);
+        if (board.get(coords) != null) {
+            tileClasses = (Stack<TileClass>) board.get(coords);
         }
         tileClasses.push(tileClass);
-        testBoard.put(coords, tileClasses);
+        board.put(coords, tileClasses);
 
     }
 
@@ -133,41 +126,63 @@ public class Board {
         return testBoard;
     }
 
-    Integer testMoveTile(int fromQ, int fromR, int toQ, int toR) {
-
-        System.out.println("Before Board  " + board);
-        HashMap<ArrayList<Integer>, Stack<TileClass>> testBoard = copy(board);
-
-        System.out.println("Before TestBoard  " + testBoard);
-        System.out.println();
-
+    public boolean testMoveTile(int fromQ, int fromR, int toQ, int toR) {
         Integer counter = 0;
         ArrayList<Integer> fromCoords = new ArrayList<>();
 
         fromCoords.add(fromQ);
         fromCoords.add(fromR);
-        Stack<TileClass> testTilesOnSpot = testBoard.get(fromCoords);
-        TileClass t = testTilesOnSpot.pop();
-        System.out.println(t);
-        System.out.println("Just for testSetTile Board  " + board);
-        System.out.println("Just for testSetTile TestBoard  " + testBoard);
 
-        testSetTile(toQ, toR, t, testBoard);
+        Stack<TileClass> testTilesOnSpot = board.get(fromCoords);
+        TileClass t = testTilesOnSpot.pop();
+
+        testSetTile(toQ, toR, t);
 
         if (testTilesOnSpot.empty()) {
-            testBoard.remove(fromCoords);
+            board.remove(fromCoords);
         }
 
         for (ArrayList<Integer> neighbour : getNeighbours(toQ, toR)) {
-            if (testBoard.get(neighbour) != null) {
+            if (board.get(neighbour) != null) {
                 counter++;
             }
         }
-        System.out.println();
-        System.out.println();
-        System.out.println("After Board  " + board);
-        System.out.println("After TestBoard  " + testBoard);
-        return counter;
+
+
+        ArrayList<ArrayList<Integer>> tileList = new ArrayList<>();
+        ArrayList<Integer> toCoords = new ArrayList<>();
+        toCoords.add(toQ);
+        toCoords.add(toR);
+        tileList.add(toCoords);
+        for (int i = 0; i < tileList.size() ; i++){
+            for (ArrayList<Integer> neighbour : getNeighbours(tileList.get(i).get(0), tileList.get(i).get(1))){
+                if (board.get(neighbour) != null){
+                    if (!tileList.contains(neighbour)){
+                        System.out.println(neighbour + "Is not inside TileList");
+                        tileList.add(neighbour);
+                    }
+                }
+            }
+        }
+        if (tileList.size() < board.size()){
+            System.out.println("It's not connected anymore!");
+            //Restoring the board
+            testTilesOnSpot.push(t);
+            board.put(fromCoords, testTilesOnSpot);
+            board.remove(toCoords);
+            return false;
+        }
+
+        if (counter == 0){
+            System.out.println("Move 5");
+            //Restoring the board
+            testTilesOnSpot.push(t);
+            board.put(fromCoords, testTilesOnSpot);
+            board.remove(toCoords);
+            return false;
+        }
+
+        return true;
     }
 
 }

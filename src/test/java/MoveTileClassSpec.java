@@ -44,7 +44,7 @@ public class MoveTileClassSpec {
         g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
         g.setTile(1, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
         g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
-        g.moveTile(0, 0, 0, 1);
+        assertFalse(g.moveTile(0, 0, 0, 1));
 
     }
 }

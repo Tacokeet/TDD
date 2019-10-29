@@ -165,7 +165,7 @@ public class Game implements Hive {
             }
         }
 
-        if (board.testMoveTile(fromQ,fromR,toQ,toR) == 0){
+        if (!board.testMoveTile(fromQ, fromR, toQ, toR)) {
             System.out.println("Move 5");
             return false;
         }
@@ -183,7 +183,6 @@ public class Game implements Hive {
             currentPlayer = Hive.Player.WHITE;
         }
     }
-
 
 
     @Override
