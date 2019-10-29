@@ -14,6 +14,8 @@ public class Game {
     private Boolean whiteTileInPlay = false;
     private Boolean blackQueenBeeInPlay = false;
     private Boolean whiteQueenBeeInPlay = false;
+    private ArrayList<Tile> blackTilesInPlay = new ArrayList<Tile>();
+    private ArrayList<Tile> whiteTilesInPlay = new ArrayList<Tile>();
 
     public Game() {
         victory.put(Hive.Player.BLACK, 0);
@@ -57,6 +59,7 @@ public class Game {
         victory.put(Hive.Player.WHITE, 0);
     }
 
+
     public boolean setTile(int q, int r, Tile tile) {
         Integer counter = 0;
         boolean inNotPlayedTiles = false;
@@ -64,12 +67,11 @@ public class Game {
         coords.add(q);
         coords.add(r);
         if (tile.getPlayer() == Hive.Player.BLACK) {
-            if (tile.getTile() == Hive.Tile.QUEEN_BEE){
+            if (tile.getTile() == Hive.Tile.QUEEN_BEE) {
                 blackQueenBeeInPlay = true;
             }
             if (blackPlayer.getStartingTiles().size() == 8 && !blackQueenBeeInPlay) {
                 if (tile.getTile() != Hive.Tile.QUEEN_BEE) {
-                    System.out.println(coords + " " + tile.getTile() + " " + tile.getPlayer());
                     System.out.println(1);
                     return false;
                 }
@@ -80,7 +82,7 @@ public class Game {
                 }
             }
         } else if (tile.getPlayer() == Hive.Player.WHITE) {
-            if (tile.getTile() == Hive.Tile.QUEEN_BEE){
+            if (tile.getTile() == Hive.Tile.QUEEN_BEE) {
                 whiteQueenBeeInPlay = true;
             }
             if (whitePlayer.getStartingTiles().size() == 8 && !whiteQueenBeeInPlay) {
@@ -129,9 +131,11 @@ public class Game {
             whiteTileInPlay = true;
         }
 
-        if (tile.getPlayer() == Hive.Player.BLACK){
+        if (tile.getPlayer() == Hive.Player.BLACK) {
+            blackTilesInPlay.add(tile);
             blackPlayer.removeTile(tile);
-        }else  if (tile.getPlayer() == Hive.Player.WHITE){
+        } else if (tile.getPlayer() == Hive.Player.WHITE) {
+            whiteTilesInPlay.add(tile);
             whitePlayer.removeTile(tile);
         }
         board.setTile(q, r, tile);
@@ -140,10 +144,42 @@ public class Game {
         return true;
     }
 
-    public void moveTile(int fromQ, int fromR, int toQ, int toR) {
+    public boolean moveTile(int fromQ, int fromR, int toQ, int toR) {
+        Integer counter = 0;
+        if (board.getTilesOnSpot(fromQ, fromR).peek().getPlayer() == Hive.Player.BLACK) {
+            if (!blackTilesInPlay.contains(board.getTilesOnSpot(fromQ, fromR).peek())) {
+                System.out.println("Move 1");
+                return false;
+            }
+            if (!blackQueenBeeInPlay) {
+                System.out.println("Move 2");
+                return false;
+            }
+        } else {
+            if (!whiteTilesInPlay.contains(board.getTilesOnSpot(fromQ, fromR).peek())) {
+                System.out.println("Move 3");
+                return false;
+            }
+            if (!whiteQueenBeeInPlay) {
+                System.out.println("Move 4");
+                return false;
+            }
+        }
+
+        for (ArrayList<Integer> neighbour : board.getNeighbours(toQ, toR)) {
+            if (board.getBoard().get(neighbour) != null) {
+                counter++;
+            }
+        }
+        if (counter == 0){
+            System.out.println("Move 5");
+            return false;
+        }
+
         board.moveTile(fromQ, fromR, toQ, toR);
         checkVictory();
         pass();
+        return true;
     }
 
     public void pass() {

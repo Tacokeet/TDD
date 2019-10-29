@@ -65,11 +65,8 @@ public class GameSpec {
         g.setTile(3, -1, new Tile(Hive.Player.WHITE, Hive.Tile.BEETLE));
         g.moveTile(3,-1,2,-1);
 
-        System.out.println("Come here?");
         g.setTile(2,1, new Tile(Hive.Player.WHITE, Hive.Tile.SPIDER));
-        System.out.println("After that");
         g.moveTile(2,1,1,1);
-        System.out.println("dOnes");
         assertEquals("DRAW", g.getWinner());
     }
 }
