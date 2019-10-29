@@ -22,7 +22,7 @@ public class GameSpec {
         g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.BEETLE));
         assertEquals(Hive.Player.BLACK, g.getCurrentPlayer());
 
-        g.moveTile(0, 0, 1, 0);
+        g.setTile(1,0, new TileClass(Hive.Player.BLACK, Hive.Tile.BEETLE));
         assertEquals(Hive.Player.WHITE, g.getCurrentPlayer());
 
         g.pass();

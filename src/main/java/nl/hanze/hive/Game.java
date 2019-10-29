@@ -3,7 +3,7 @@ package nl.hanze.hive;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game implements Hive{
+public class Game implements Hive {
     private Hive.Player currentPlayer = Hive.Player.WHITE;
     private Board board = new Board();
     private String winner = null;
@@ -145,8 +145,7 @@ public class Game implements Hive{
     }
 
     public boolean moveTile(int fromQ, int fromR, int toQ, int toR) {
-        Integer counter = 0;
-        if (board.getTilesOnSpot(fromQ, fromR).peek().getPlayer() == Hive.Player.BLACK) {
+        if (getCurrentPlayer() == Hive.Player.BLACK) {
             if (!blackTilesInPlay.contains(board.getTilesOnSpot(fromQ, fromR).peek())) {
                 System.out.println("Move 1");
                 return false;
@@ -166,12 +165,7 @@ public class Game implements Hive{
             }
         }
 
-        for (ArrayList<Integer> neighbour : board.getNeighbours(toQ, toR)) {
-            if (board.getBoard().get(neighbour) != null) {
-                counter++;
-            }
-        }
-        if (counter == 0){
+        if (board.testMoveTile(fromQ,fromR,toQ,toR) == 0){
             System.out.println("Move 5");
             return false;
         }
@@ -182,6 +176,16 @@ public class Game implements Hive{
         return true;
     }
 
+    public void pass() {
+        if (currentPlayer == Hive.Player.WHITE) {
+            currentPlayer = Hive.Player.BLACK;
+        } else {
+            currentPlayer = Hive.Player.WHITE;
+        }
+    }
+
+
+
     @Override
     public void play(Tile tile, int q, int r) throws IllegalMove {
 
@@ -189,15 +193,7 @@ public class Game implements Hive{
 
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-
-    }
-
-    public void pass() {
-        if (currentPlayer == Hive.Player.WHITE) {
-            currentPlayer = Hive.Player.BLACK;
-        } else {
-            currentPlayer = Hive.Player.WHITE;
-        }
+        moveTile(fromQ, fromR, toQ, toR);
     }
 
     @Override
