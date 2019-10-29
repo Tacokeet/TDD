@@ -6,14 +6,14 @@ import java.util.Stack;
 
 public class Board {
 
-    private HashMap<ArrayList<Integer>, Stack<Tile>> board = new HashMap<>();
+    private HashMap<ArrayList<Integer>, Stack<TileClass>> board = new HashMap<>();
     private HashMap<Hive.Player, ArrayList<Integer>> queenList = new HashMap<>();
 
-    public HashMap<ArrayList<Integer>, Stack<Tile>> getBoard() {
+    public HashMap<ArrayList<Integer>, Stack<TileClass>> getBoard() {
         return board;
     }
 
-    public Stack<Tile> getTilesOnSpot(int q, int r) {
+    public Stack<TileClass> getTilesOnSpot(int q, int r) {
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(q);
         coords.add(r);
@@ -50,18 +50,18 @@ public class Board {
         return neighbours;
     }
 
-    public void setTile(int q, int r, Tile tile) {
+    public void setTile(int q, int r, TileClass tileClass) {
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(q);
         coords.add(r);
-        Stack<Tile> tiles = new Stack<>();
+        Stack<TileClass> tileClasses = new Stack<>();
         if (board.get(coords) != null) {
-            tiles = board.get(coords);
+            tileClasses = board.get(coords);
         }
-        tiles.push(tile);
-        board.put(coords, tiles);
-        if (tile.getTile() == Hive.Tile.QUEEN_BEE){
-            queenList.put(tile.getPlayer(), coords);
+        tileClasses.push(tileClass);
+        board.put(coords, tileClasses);
+        if (tileClass.getTile() == Hive.Tile.QUEEN_BEE){
+            queenList.put(tileClass.getPlayer(), coords);
         }
     }
 
@@ -70,7 +70,7 @@ public class Board {
         fromCoords.add(fromQ);
         fromCoords.add(fromR);
 
-        Stack<Tile> tilesOnSpot = getTilesOnSpot(fromQ, fromR);
+        Stack<TileClass> tilesOnSpot = getTilesOnSpot(fromQ, fromR);
         setTile(toQ, toR, tilesOnSpot.pop());
 
         if (tilesOnSpot.empty()) {

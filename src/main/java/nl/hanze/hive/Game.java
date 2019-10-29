@@ -3,19 +3,19 @@ package nl.hanze.hive;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game {
+public class Game implements Hive{
     private Hive.Player currentPlayer = Hive.Player.WHITE;
     private Board board = new Board();
     private String winner = null;
     private HashMap<Hive.Player, Integer> victory = new HashMap<>();
-    private Player blackPlayer = new Player(Hive.Player.BLACK);
-    private Player whitePlayer = new Player(Hive.Player.WHITE);
+    private PlayerClass blackPlayer = new PlayerClass(Hive.Player.BLACK);
+    private PlayerClass whitePlayer = new PlayerClass(Hive.Player.WHITE);
     private Boolean blackTileInPlay = false;
     private Boolean whiteTileInPlay = false;
     private Boolean blackQueenBeeInPlay = false;
     private Boolean whiteQueenBeeInPlay = false;
-    private ArrayList<Tile> blackTilesInPlay = new ArrayList<Tile>();
-    private ArrayList<Tile> whiteTilesInPlay = new ArrayList<Tile>();
+    private ArrayList<TileClass> blackTilesInPlay = new ArrayList<TileClass>();
+    private ArrayList<TileClass> whiteTilesInPlay = new ArrayList<TileClass>();
 
     public Game() {
         victory.put(Hive.Player.BLACK, 0);
@@ -60,7 +60,7 @@ public class Game {
     }
 
 
-    public boolean setTile(int q, int r, Tile tile) {
+    public boolean setTile(int q, int r, TileClass tile) {
         Integer counter = 0;
         boolean inNotPlayedTiles = false;
         ArrayList<Integer> coords = new ArrayList<>();
@@ -70,13 +70,13 @@ public class Game {
             if (tile.getTile() == Hive.Tile.QUEEN_BEE) {
                 blackQueenBeeInPlay = true;
             }
-            if (blackPlayer.getStartingTiles().size() == 8 && !blackQueenBeeInPlay) {
+            if (blackPlayer.getStartingTileClasses().size() == 8 && !blackQueenBeeInPlay) {
                 if (tile.getTile() != Hive.Tile.QUEEN_BEE) {
                     System.out.println(1);
                     return false;
                 }
             }
-            for (Tile t : blackPlayer.getStartingTiles()) {
+            for (TileClass t : blackPlayer.getStartingTileClasses()) {
                 if (t.getTile() == tile.getTile()) {
                     inNotPlayedTiles = true;
                 }
@@ -85,13 +85,13 @@ public class Game {
             if (tile.getTile() == Hive.Tile.QUEEN_BEE) {
                 whiteQueenBeeInPlay = true;
             }
-            if (whitePlayer.getStartingTiles().size() == 8 && !whiteQueenBeeInPlay) {
+            if (whitePlayer.getStartingTileClasses().size() == 8 && !whiteQueenBeeInPlay) {
                 if (tile.getTile() != Hive.Tile.QUEEN_BEE) {
                     System.out.println(2);
                     return false;
                 }
             }
-            for (Tile t : whitePlayer.getStartingTiles()) {
+            for (TileClass t : whitePlayer.getStartingTileClasses()) {
                 if (t.getTile() == tile.getTile()) {
                     inNotPlayedTiles = true;
                 }
@@ -112,7 +112,7 @@ public class Game {
             if (board.getBoard().get(neighbour) != null) {
                 counter++;
                 if (blackTileInPlay && whiteTileInPlay) {
-                    for (Tile t : board.getBoard().get(neighbour)) {
+                    for (TileClass t : board.getBoard().get(neighbour)) {
                         if (t.getPlayer() != tile.getPlayer()) {
                             System.out.println(5);
                             return false;
@@ -182,12 +182,32 @@ public class Game {
         return true;
     }
 
+    @Override
+    public void play(Tile tile, int q, int r) throws IllegalMove {
+
+    }
+
+    @Override
+    public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
+
+    }
+
     public void pass() {
         if (currentPlayer == Hive.Player.WHITE) {
             currentPlayer = Hive.Player.BLACK;
         } else {
             currentPlayer = Hive.Player.WHITE;
         }
+    }
+
+    @Override
+    public boolean isWinner(Player player) {
+        return false;
+    }
+
+    @Override
+    public boolean isDraw() {
+        return false;
     }
 
 }
