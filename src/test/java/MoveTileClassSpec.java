@@ -36,7 +36,7 @@ public class MoveTileClassSpec {
 
     }
 
-    //D NOT WORKING!!
+    //D
     @Test
     void givenTileToMoveWhenTileMovedCreatesTwoIslandsThenFalse() {
         Game g = new Game();
@@ -45,6 +45,19 @@ public class MoveTileClassSpec {
         g.setTile(1, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
         g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
         assertFalse(g.moveTile(0, 0, 0, 1));
+
+    }
+
+    @Test
+    void givenSpecificTileToMoveWhenTileDidIllegalMoveThenFalse() {
+        Game g = new Game();
+        g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
+        g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
+        g.setTile(1, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
+        g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
+        g.setTile(1, -1, new TileClass(Hive.Player.WHITE, Hive.Tile.SOLDIER_ANT));
+        g.moveTile(-1, -1, 0, -1);
+        assertFalse(g.moveTile(0, 0, 1, 1));
 
     }
 }

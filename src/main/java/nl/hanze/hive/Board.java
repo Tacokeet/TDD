@@ -158,12 +158,12 @@ public class Board {
             for (ArrayList<Integer> neighbour : getNeighbours(tileList.get(i).get(0), tileList.get(i).get(1))){
                 if (board.get(neighbour) != null){
                     if (!tileList.contains(neighbour)){
-                        System.out.println(neighbour + "Is not inside TileList");
                         tileList.add(neighbour);
                     }
                 }
             }
         }
+
         if (tileList.size() < board.size()){
             System.out.println("It's not connected anymore!");
             //Restoring the board
@@ -181,7 +181,10 @@ public class Board {
             board.remove(toCoords);
             return false;
         }
-
+        //Restoring the board
+        testTilesOnSpot.push(t);
+        board.put(fromCoords, testTilesOnSpot);
+        board.remove(toCoords);
         return true;
     }
 
