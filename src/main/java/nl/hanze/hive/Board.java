@@ -133,6 +133,13 @@ public class Board {
         fromCoords.add(fromQ);
         fromCoords.add(fromR);
 
+        if (getTilesOnSpot(fromQ, fromR).peek().getTile() != Hive.Tile.BEETLE){
+            if (getTilesOnSpot(toQ, toR) != null) {
+                System.out.println("Can't move to tile because there is already a tile there");
+                return false;
+            }
+        }
+
         Stack<TileClass> testTilesOnSpot = board.get(fromCoords);
         TileClass t = testTilesOnSpot.pop();
 

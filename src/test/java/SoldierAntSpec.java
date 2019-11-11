@@ -6,21 +6,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Queen_BeeSpec {
+public class SoldierAntSpec {
 
     //A
     @Test
-    void givenQueen_BeeToMoveWhenMoveMoreThanOneTileThenFalse() {
+    void givenSoldierAntToMove() {
         Game g = new Game();
         g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
         g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
         g.setTile(1, -1, new TileClass(Hive.Player.WHITE, Hive.Tile.SOLDIER_ANT));
-        g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
-        assertFalse(g.moveTile(0,0,2,1));
+        g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.SOLDIER_ANT));
+        if (g.moveTile(1,-1,-1,-2)){
+            System.out.println("Succesvol!");
+        }
+
     }
     //B
     @Test
-    void givenQueen_BeeToMoveWhenMovingOnTopOfAnotherTileThenFalse() {
+    void givenSoldierAntToMoveWhenThen() {
         Game g = new Game();
         g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
         g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
