@@ -25,7 +25,7 @@ public class GameSpec {
         g.setTile(1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.BEETLE));
         assertEquals(Hive.Player.WHITE, g.getCurrentPlayer());
 
-        g.pass();
+        g.playerPass();
         assertEquals(Hive.Player.BLACK, g.getCurrentPlayer());
     }
 
@@ -40,7 +40,8 @@ public class GameSpec {
         g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.SPIDER));
         g.setTile(-1, 1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
         g.setTile(1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
-        assertEquals("WHITE", g.getWinner());
+        assertEquals(Hive.Player.WHITE, g.getWinner());
+        g.isWinner(Hive.Player.WHITE);
     }
 
     //D
@@ -53,10 +54,10 @@ public class GameSpec {
         g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.BEETLE)); // Blacks turn
         g.setTile(3, -1, new TileClass(Hive.Player.WHITE, Hive.Tile.BEETLE)); // Whites Turn
         g.setTile(0, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.BEETLE)); // Blacks turn
-        g.setTile(2, 1, new TileClass(Hive.Player.WHITE, Hive.Tile.SPIDER)); // Whites turn
-        g.setTile(-1, 1, new TileClass(Hive.Player.BLACK, Hive.Tile.SPIDER)); // Blacks turn
+        g.setTile(2, 1, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER)); // Whites turn
+        g.setTile(-1, 1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER)); // Blacks turn
         g.setTile(3, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));// Whites turn
-        g.setTile(-1, 2, new TileClass(Hive.Player.BLACK, Hive.Tile.SPIDER));   // Blacks turn
+        g.setTile(-1, 2, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));   // Blacks turn
         g.setTile(1, -2, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));   // Whites turn
 
         g.moveTile(-1, 2, 0, 1);  // Blacks turn
@@ -65,6 +66,6 @@ public class GameSpec {
         g.moveTile(2, 1, 1, 1); // Whites turn
 
 
-        assertEquals("DRAW", g.getWinner());
+        assertEquals(true, g.getWinner());
     }
 }

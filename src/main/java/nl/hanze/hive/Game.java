@@ -3,6 +3,7 @@ package nl.hanze.hive;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Integer;
+import java.util.Stack;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.toIntExact;
@@ -11,7 +12,8 @@ import static java.lang.Math.toIntExact;
 public class Game implements Hive {
     private Hive.Player currentPlayer = Hive.Player.WHITE;
     private Board board = new Board();
-    private String winner = null;
+    private Player winner = null;
+    private boolean draw = false;
     private HashMap<Hive.Player, Integer> victory = new HashMap<>();
     private PlayerClass blackPlayer = new PlayerClass(Hive.Player.BLACK);
     private PlayerClass whitePlayer = new PlayerClass(Hive.Player.WHITE);
@@ -31,7 +33,7 @@ public class Game implements Hive {
         return currentPlayer;
     }
 
-    public String getWinner() {
+    public Player getWinner() {
         return winner;
     }
 
@@ -54,11 +56,11 @@ public class Game implements Hive {
             }
         }
         if (victory.get(Hive.Player.BLACK) == 6 && victory.get(Hive.Player.WHITE) == 6) {
-            winner = "DRAW";
+            draw = true;
         } else if (victory.get(Hive.Player.BLACK) == 6) {
-            winner = "WHITE";
+            winner = Player.WHITE;
         } else if (victory.get(Hive.Player.WHITE) == 6) {
-            winner = "BLACK";
+            winner = Player.BLACK;
         }
         victory.put(Hive.Player.BLACK, 0);
         victory.put(Hive.Player.WHITE, 0);
@@ -145,28 +147,73 @@ public class Game implements Hive {
         }
         board.setTile(q, r, tile);
         checkVictory();
-        pass();
+        playerPass();
         return true;
     }
 
-    private boolean testSoldierAnt(ArrayList<ArrayList<Integer>> legitMoves, int fromQ, int fromR, int toQ, int toR){
+    private boolean testSoldierAnt(ArrayList<ArrayList<Integer>> legitMoves, int fromQ, int fromR, int toQ, int toR, TileClass tile){
+        //    board.testMoveTile(move.get(0), move.get(1), neighbour.get(0), neighbour.get(1))
         ArrayList<ArrayList<Integer>> newLegitMoves = new ArrayList<>();
         for (ArrayList<Integer> move : legitMoves){
-            board.moveTile(fromQ, fromR, move.get(0), move.get(1));
+//            board.moveTile(fromQ, fromR, move.get(0), move.get(1));
             if (move.get(0) == toQ && move.get(1) == toR){
-                System.out.println("FOUND SOLUTIOON BJKASFBHJKASDFBJKLSDFGNJKL;BJKBJK");
+                System.out.println("Its a legit move");
                 return true;
             } else {
                 for (ArrayList<Integer> neighbour : board.getNeighbours(move.get(0), move.get(1))){
-                    System.out.println(move.get(0) + " : " +  move.get(1) + "  --------> " +  neighbour.get(0) + " : " +  neighbour.get(1));
                     if (neighbour.get(0) == fromQ && neighbour.get(1) == fromR){
                         continue;
                     }
-                    else if (board.testMoveTile(move.get(0), move.get(1), neighbour.get(0), neighbour.get(1))){
+                    else if (neighbour.get(0) == 0 && neighbour.get(1) == -1){
+
+                        ArrayList<Integer> fromCoords = new ArrayList<>();
+                        fromCoords.add(move.get(0));
+                        fromCoords.add(move.get(1));
+                        Stack<TileClass> testStack = new Stack<>();
+                        testStack.push(tile);
+
+                        board.boardPut(fromCoords, testStack);
+                        System.out.println(move.get(0) + " : " + move.get(1) +  " ----->  " + neighbour.get(0) + " : " + neighbour.get(1));
+                        if (!maySlide(move.get(0), move.get(1), neighbour.get(0), neighbour.get(1))){
+                            //TODO does return false but whole move function still says true?
+                            System.out.println("Can not fit through gap");
+                            board.boardRemove(fromCoords);
+                            return false;
+                        }
+                    }
+                    else if (board.evaluateMoveTile(move.get(0), move.get(1), neighbour.get(0), neighbour.get(1), tile)){
+//                        System.out.println(move.get(0) + " : " +  move.get(1) + "  --------> " +  neighbour.get(0) + " : " +  neighbour.get(1));
                         newLegitMoves.add(neighbour);
                     }
                 }
-                return testSoldierAnt(newLegitMoves, move.get(0), move.get(1), toQ, toR);
+                return testSoldierAnt(newLegitMoves, move.get(0), move.get(1), toQ, toR, tile);
+
+            }
+        }
+        return false;
+    }
+
+    private boolean testSpider(ArrayList<ArrayList<Integer>> legitMoves, int fromQ, int fromR, int toQ, int toR, TileClass tile){
+        ArrayList<ArrayList<Integer>> newLegitMoves = new ArrayList<>();
+        int cnt = 0;
+        for (ArrayList<Integer> move : legitMoves){
+            cnt++;
+
+            if (move.get(0) == toQ && move.get(1) == toR){
+                System.out.println("Its a legit move");
+                return true;
+            } else {
+                for (ArrayList<Integer> neighbour : board.getNeighbours(move.get(0), move.get(1))){
+
+                    if (neighbour.get(0) == fromQ && neighbour.get(1) == fromR){
+                        continue;
+                    }
+                    else if (board.evaluateMoveTile(move.get(0), move.get(1), neighbour.get(0), neighbour.get(1), tile)){
+                        newLegitMoves.add(neighbour);
+                    }
+                }
+                System.out.println("=-=-=-=-=-=-=-=-=-=-=cnt : " + cnt + "=-=-=-=-=-=-=-=-=");
+                return testSpider(newLegitMoves, move.get(0), move.get(1), toQ, toR, tile);
 
             }
         }
@@ -246,27 +293,75 @@ public class Game implements Hive {
 
                 break;
             case GRASSHOPPER:
-                System.out.println("Grasshopper");
-                break;
-            case SPIDER:
-                if (!maySlide(fromQ, fromR, toQ, toR)) {
-                    System.out.println("Spider Cannot slide like this!");
+                //Een sprinkhaan mag zich niet verplaatsen naar het veld waar hij al staat.
+                if (fromQ == toQ && fromR == toR) {
+                    System.out.println("Cant move to same spot");
                     return false;
                 }
-                if (!keepContact(fromQ, fromR, toQ, toR)) {
+                //Een sprinkhaan mag niet naar een bezet veld springen.
+                if (board.getTilesOnSpot(toQ, toR) != null){
                     return false;
+                }
+                //Een sprinkhaan moet over minimaal één steen springen.
+                if (pathMaker(fromQ, fromR, toQ, toR).isEmpty()){
+                    return false;
+                }
+
+                //Een sprinkhaan mag niet over lege velden springen.
+                for (ArrayList<Integer> coord : pathMaker(fromQ, fromR, toQ, toR)){
+                    if (board.getTilesOnSpot(coord.get(0), coord.get(1)) == null){
+                        return false;
+                    }
+                }
+
+                break;
+            case SPIDER:
+//                if (!maySlide(fromQ, fromR, toQ, toR)) {
+//                    System.out.println("Spider Cannot slide like this!");
+//                    return false;
+//                }
+//                if (!keepContact(fromQ, fromR, toQ, toR)) {
+//                    return false;
+//                }
+                if (fromQ == toQ && fromR == toR) {
+                    System.out.println("Cant move to same spot");
+                    return false;
+                }
+                ArrayList<ArrayList<Integer>> legitSpiderMoves = new ArrayList<>();
+                for (ArrayList<Integer> neighbour : board.getNeighbours(fromQ, fromR)){
+                    if (board.testMoveTile(fromQ, fromR, neighbour.get(0), neighbour.get(1))){
+                        legitSpiderMoves.add(neighbour);
+                    }
+                }
+                if (testSpider(legitSpiderMoves, fromQ, fromR, toQ ,toR, board.getTilesOnSpot(fromQ, fromR).peek())){
+                    return true;
                 }
                 break;
             case SOLDIER_ANT:
-                //TODO solve!
-                ArrayList<ArrayList<Integer>> legitMoves = new ArrayList<>();
+                ArrayList<ArrayList<Integer>> legitSoldier_antMoves = new ArrayList<>();
+                int cnt = 0;
 
+                if (fromQ == toQ && fromR == toR) {
+                    System.out.println("Cant move to same spot");
+                    return false;
+                }
                 for (ArrayList<Integer> neighbour : board.getNeighbours(fromQ, fromR)){
                     if (board.testMoveTile(fromQ, fromR, neighbour.get(0), neighbour.get(1))){
-                        legitMoves.add(neighbour);
+                        legitSoldier_antMoves.add(neighbour);
                     }
                 }
-                if (testSoldierAnt(legitMoves, fromQ, fromR, toQ ,toR)){
+                for (ArrayList<Integer> neighbour : board.getNeighbours(toQ, toR)){
+                    if (board.getTilesOnSpot(neighbour.get(0), neighbour.get(1)) == null){
+                        cnt++;
+                    }
+                }
+                if (cnt == 6){
+                    return false;
+                }
+//                if (!keepContact(fromQ, fromR, toQ, toR)) {
+//                    return false;
+//                }
+                if (testSoldierAnt(legitSoldier_antMoves, fromQ, fromR, toQ ,toR, board.getTilesOnSpot(fromQ, fromR).peek())){
                     return true;
                 }
 
@@ -307,13 +402,8 @@ public class Game implements Hive {
 //                    System.out.println("Soldier ant Cannot slide like this!");
 //                    return false;
 //                }
-                if (fromQ == toQ && fromR == toR) {
-                    System.out.println("Cant move to same spot");
-                    return false;
-                }
-                if (!keepContact(fromQ, fromR, toQ, toR)) {
-                    return false;
-                }
+
+
                 break;
         }
 
@@ -324,18 +414,67 @@ public class Game implements Hive {
 
         board.moveTile(fromQ, fromR, toQ, toR);
         checkVictory();
-        pass();
+        playerPass();
         return true;
     }
 
-    public void pass() {
+    public boolean playerPass() {
         if (currentPlayer == Hive.Player.WHITE) {
             currentPlayer = Hive.Player.BLACK;
         } else {
             currentPlayer = Hive.Player.WHITE;
         }
+        return true;
     }
 
+    private ArrayList<ArrayList<Integer>> pathMaker(int fromQ, int fromR, int toQ, int toR){
+        int x = 0;
+        int y = 0;
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        if (fromQ != toQ && fromR != toR){
+            // now we know rechtsboven of linksonder
+            if (toQ < fromQ && toR > fromR){
+                // Linksonder gegaan
+                x = -1;
+                y = 1;
+            }else if(toQ > fromQ && toR < fromR){
+                //rechtsboven
+                x = 1;
+                y = -1;
+            }
+        }else if (fromQ == toQ && fromR != toR){
+            // Rechtsonder of Linksboven
+            if (toR > fromR){
+                //Rechtsonder
+                y = 1;
+            }else {
+                // Linksboven
+                y = -1;
+            }
+        }else if (fromQ != toQ && fromR == toR){
+            // Rechts of Links
+            if (toQ > fromQ){
+                // Rechts
+                x = 1;
+            } else {
+                // Links
+                x = -1;
+            }
+        }
+        if (x == 0 && y == 0){
+            return path;
+        }
+        while(fromQ != toQ || fromR != toR){
+            ArrayList<Integer> coords = new ArrayList<>();
+            fromQ += x;
+            fromR += y;
+            coords.add(fromQ);
+            coords.add(fromR);
+            path.add(coords);
+        }
+        path.remove(path.size() -1);
+        return path;
+    }
     private boolean keepContact(int fromQ, int fromR, int toQ, int toR) {
 
         // keep contact while sliding
@@ -407,6 +546,7 @@ public class Game implements Hive {
                 }
             }
             toNeighbours.retainAll(fromNeighbours);
+
             if (toNeighbours.isEmpty() || toNeighbours.size() == 1) {
                 return true;
             }
@@ -427,23 +567,41 @@ public class Game implements Hive {
 
     @Override
     public void play(Tile tile, int q, int r) throws IllegalMove {
-        setTile(q, r, new TileClass(getCurrentPlayer(), tile));
+        if (!setTile(q, r, new TileClass(getCurrentPlayer(), tile))){
+            throw new IllegalMove();
+        }
 
     }
 
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-        moveTile(fromQ, fromR, toQ, toR);
+        if (!moveTile(fromQ, fromR, toQ, toR)){
+            throw new IllegalMove();
+        }
+    }
+
+    @Override
+    public void pass() throws IllegalMove {
+        if (!playerPass()){
+            throw new IllegalMove();
+        }
     }
 
     @Override
     public boolean isWinner(Player player) {
+        if (winner == null){
+            return false;
+        }
+        if (winner == player){
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public boolean isDraw() {
-        return false;
+        return draw;
     }
 
 }
