@@ -19,18 +19,6 @@ public class SoldierAntSpec {
 
     }
 
-//    @Test
-//    void givenSoldierAntToMoveWhenIllegalThenFalse() {
-//        Game g = new Game();
-//        g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
-//        g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
-//        g.setTile(1, -1, new TileClass(Hive.Player.WHITE, Hive.Tile.SPIDER));
-//        g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.SPIDER));
-//        g.setTile(0,1,new TileClass(Hive.Player.WHITE, Hive.Tile.SOLDIER_ANT));
-//        g.setTile(0,-2, new TileClass(Hive.Player.BLACK, Hive.Tile.SOLDIER_ANT));
-//        assertFalse(g.moveTile(0,1,0,-1));
-//
-//    }
 
     @Test
     void givenSoldierAntToMoveWhenMovingToStartingSpaceThenFalse() {

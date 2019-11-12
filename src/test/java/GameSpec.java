@@ -66,6 +66,6 @@ public class GameSpec {
         g.moveTile(2, 1, 1, 1); // Whites turn
 
 
-        assertEquals(true, g.getWinner());
+        assertTrue(g.isDraw());
     }
 }

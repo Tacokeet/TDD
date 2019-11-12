@@ -20,6 +20,16 @@ public class GrasshopperSpec {
     }
 
     @Test
+    void givenGrasshopperToMoveWhenIllegalMoveThenFalse(){
+        Game g = new Game();
+        g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
+        g.setTile(-1, 0, new TileClass(Hive.Player.BLACK, Hive.Tile.QUEEN_BEE));
+        g.setTile(1, -1, new TileClass(Hive.Player.WHITE, Hive.Tile.GRASSHOPPER));
+        g.setTile(-1, -1, new TileClass(Hive.Player.BLACK, Hive.Tile.GRASSHOPPER));
+        assertFalse(g.moveTile(1,-1,-2,-1));
+    }
+
+    @Test
     void givenGrasshopperToMoveWhenMovingToStartingSpaceThenFalse() {
         Game g = new Game();
         g.setTile(0, 0, new TileClass(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
@@ -29,9 +39,4 @@ public class GrasshopperSpec {
         assertFalse(g.moveTile(1,-1,1,-1));
     }
 
-    @Test
-    void name() {
-        Game g = new Game();
-        g.isWinner(Hive.Player.BLACK);
-    }
 }
